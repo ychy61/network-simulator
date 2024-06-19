@@ -5,7 +5,8 @@
 
 class Host;
 
-class Service {
+class Service
+{
   friend class ServiceInstaller;
 
 protected:
@@ -16,6 +17,11 @@ protected:
   short port_;
 
   Service(Host *host, int port) : host_(host), port_(port) {}
+
+public:
+  virtual ~Service() {}
+  virtual void onReceive(Packet *packet) = 0;
+  short port() const { return port_; }
 };
 
 #endif

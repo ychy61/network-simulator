@@ -17,7 +17,7 @@ void Host::send(Packet *packet)
             size_t linkTableSize = linkTable().size();
             if (linkTableSize > 0)
             {
-                  linkTable()[rand() % linkTableSize]->onReceive(this,packet);
+                  linkTable()[rand() % linkTableSize]->onReceive(this, packet);
             }
       }
 }
@@ -29,7 +29,7 @@ void Host::onReceive(Packet *packet)
       std::string dataLength = std::to_string(packet->dataString().size());
       if (address_ == packet->destAddress())
       {
-            std::cout << "Host #" << id() << ": received packet, destination port: " << packet->destPort() << std::endl;
+
             Service *service = Host::getService(packet->destPort());
             if (service == nullptr)
             {
@@ -38,6 +38,7 @@ void Host::onReceive(Packet *packet)
             }
             else
             {
+                  std::cout << "Host #" << id() << ": received packet, destination port: " << packet->destPort() << std::endl;
                   service->onReceive(packet);
             }
       }

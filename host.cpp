@@ -6,14 +6,17 @@
 void Host::initialize()
 {
 }
+
 void Host::send(Packet *packet)
 {
       std::string from = packet->srcAddress().toString();
       std::string to = packet->destAddress().toString();
       std::string dataLength = std::to_string(packet->dataString().size());
+
       if (address_ == packet->srcAddress())
       {
-            std::cout << "Host #" << id() << ": sending packet (from: " << from << ", to: " << to << ", " << dataLength << " bytes)" << std::endl;
+            log("sending packet: " + packet->toString());
+
             size_t linkTableSize = linkTable().size();
             if (linkTableSize > 0)
             {
@@ -24,21 +27,19 @@ void Host::send(Packet *packet)
 
 void Host::onReceive(Packet *packet)
 {
-      std::string from = packet->srcAddress().toString();
-      std::string to = packet->destAddress().toString();
-      std::string dataLength = std::to_string(packet->dataString().size());
+
       if (address_ == packet->destAddress())
       {
+            Service *service = getService(packet->destPort());
 
-            Service *service = Host::getService(packet->destPort());
             if (service == nullptr)
             {
-                  std::cout << "Host #" << id() << ": no service for packet (from: " << from << ", to: " << to << ", " << dataLength << " bytes)" << std::endl;
+                  log("no service for packet: " + packet->toString());
                   delete packet;
             }
             else
             {
-                  std::cout << "Host #" << id() << ": received packet, destination port: " << packet->destPort() << std::endl;
+                  log("received packet: " + packet->toString() + ", forwarding to " + service->toString());
                   service->onReceive(packet);
             }
       }
@@ -64,16 +65,4 @@ void Host::addLink(Link *link)
 int Host::nextServicePort()
 {
       return 1000 + static_cast<int>(services_.size());
-}
-
-Link *Host::getRandomLink()
-{
-      if (links_.empty())
-      {
-            return nullptr;
-      }
-
-      std::mt19937 rng(std::random_device{}());
-      std::uniform_int_distribution<std::size_t> dist(0, links_.size() - 1);
-      return links_[dist(rng)];
 }

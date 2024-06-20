@@ -1,11 +1,12 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+#include "object.h"
 #include "node.h"
 
 class Host;
 
-class Service
+class Service : Object
 {
   friend class ServiceInstaller;
 
@@ -18,10 +19,13 @@ protected:
 
   Service(Host *host, int port) : host_(host), port_(port) {}
 
+  void log(std::string message) { Object::log(message); }
+
 public:
   virtual ~Service() {}
   virtual void onReceive(Packet *packet) = 0;
   short port() const { return port_; }
+  std::string toString() { return Object::toString(); }
 };
 
 #endif

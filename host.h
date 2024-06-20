@@ -18,7 +18,7 @@ private:
   std::vector<Service *> services_;
 
   std::vector<Link *> links_;
-  Link* getRandomLink();
+  virtual std::string name() override { return "Host"; }
 
 public:
   Address address() { return address_; }

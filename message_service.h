@@ -7,7 +7,8 @@
 #include <iostream>
 
 // send 함수를 호출하여 메시지를 전송할 수 있는 서비스
-class MessageService : public Service {
+class MessageService : public Service
+{
   friend class MessageServiceInstaller;
 
 private:
@@ -17,11 +18,12 @@ private:
   short destPort_;
   MessageService(Host *host, short port, Address destAddress, short destPort)
       : Service(host, port), destAddress_(destAddress), destPort_(destPort) {}
+  virtual std::string name() override { return "MessageService"; }
 
 public:
   // 메시지를 전송한다
   void send(std::string message);
-  void onReceive(Packet *packet) override ;
+  void onReceive(Packet *packet) override;
 };
 
 #endif

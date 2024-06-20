@@ -24,10 +24,12 @@ void Router::onReceive(Packet *packet)
       int routingTableIndex = Destination(packet->destAddress());
       if (routingTableIndex == -1)
       {
-            std::cout << "Router #" << id() << ": no route for packet (from: " << from << ", to: " << to << ", " << dataLength << " bytes)" << std::endl;
+            log("no route for packet: " + packet->toString());
+            delete packet;
             return;
       }
-
-      std::cout << "Router #" << id() << ": forwarding packet (from: " << from << ", to: " << to << ", " << dataLength << " bytes)" << std::endl;
-      routingTable_[routingTableIndex].nextLink->onReceive(this, std::move(packet));
+      // 패킷을 다음 링크로 전달
+      std::string linkId = routingTable_[routingTableIndex].nextLink->toString();
+      log("forwarding packet: " + packet->toString() + " to " + linkId);
+      routingTable_[routingTableIndex].nextLink->onReceive(this, packet);
 }

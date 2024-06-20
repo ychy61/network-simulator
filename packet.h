@@ -1,17 +1,21 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include "object.h"
 #include "address.h"
 #include <string>
 #include <vector>
 
-class Packet {
+class Packet : Object
+{
 public:
   Packet(Address srcAddress, Address destAddress, short srcPort, short destPort,
          std::string data)
       : srcAddress_(srcAddress), destAddress_(destAddress), srcPort_(srcPort),
-        destPort_(destPort) {
-    for (size_t i = 0; i < data.size(); i++) {
+        destPort_(destPort)
+  {
+    for (size_t i = 0; i < data.size(); i++)
+    {
       data_.push_back(data[i]);
     }
   }
@@ -37,13 +41,17 @@ public:
   const std::vector<char> &data() { return data_; }
 
   // 패킷 데이터를 문자열로 변환한다
-  std::string dataString() {
+  std::string dataString()
+  {
     std::string str;
-    for (size_t i = 0; i < data_.size(); i++) {
+    for (size_t i = 0; i < data_.size(); i++)
+    {
       str += data_[i];
     }
     return str;
   }
+
+  std::string toString() { return Object::toString(); }
 
 private:
   Address srcAddress_;
@@ -51,6 +59,7 @@ private:
   short srcPort_;
   short destPort_;
   std::vector<char> data_;
+  virtual std::string name() override { return "Packet"; }
 };
 
 #endif
